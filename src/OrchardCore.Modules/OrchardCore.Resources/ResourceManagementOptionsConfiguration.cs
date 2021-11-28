@@ -17,8 +17,8 @@ namespace OrchardCore.Resources
 
         private const string cloudflareUrl = "https://cdnjs.cloudflare.com/ajax/libs/";
         // Versions
-        private const string codeMirrorVersion = "5.63.3";
-        private const string monacoEditorVersion = "0.29.1";
+        private const string codeMirrorVersion = "5.64.0";
+        private const string monacoEditorVersion = "0.30.0";
         // URLs
         private const string codeMirrorUrl = cloudflareUrl + "codemirror/" + codeMirrorVersion + "/";
 
@@ -220,14 +220,14 @@ namespace OrchardCore.Resources
                 .DefineStyle("codemirror")
                 .SetUrl("~/OrchardCore.Resources/Styles/codemirror/codemirror.min.css", "~/OrchardCore.Resources/Styles/codemirror/codemirror.css")
                 .SetCdn(codeMirrorUrl + "codemirror.min.css", codeMirrorUrl + "codemirror.css")
-                .SetCdnIntegrity("sha384-fKSWWdslwVrAPg886Khlz15v1ePW2DSRN+MJy2nsAPkB8TGgeSA6QSwnI/XCi/If", "sha384-Mz9nubuDLysyluqda66lXjuMhXMkpF5gbBp9Qqd2Br2Lm8pNgYb08RzrUS12DWYG")
+                .SetCdnIntegrity("sha384-KoxwpPPg4NMA10DxiUgtUyRWwpky7/582Ua4fbpJj6bNHAOqOiqSJfRZ+GLArzSR", "sha384-CQoQE99ffnItQimoAYyaWSR3jOs54zfOQ/PUaS7dycVqenh7FJWKca5xa260ehrV")
                 .SetVersion(codeMirrorVersion);
 
             manifest
                 .DefineScript("codemirror")
                 .SetUrl("~/OrchardCore.Resources/Scripts/codemirror/codemirror.min.js", "~/OrchardCore.Resources/Scripts/codemirror/codemirror.js")
                 .SetCdn(codeMirrorUrl + "codemirror.min.js", codeMirrorUrl + "codemirror.js")
-                .SetCdnIntegrity("sha384-klNIRtulvT6DtbSdla9WhPR0JFTTCEs6ySmX69bSgiHnRHT0LBneQTh/yaaHEhPg", "sha384-eInv95vvU5ItRvJq+D3m+nuMCbz57vIiXc0pF9vWXQeynCxriaqqJA1mancWW2Xn")
+                .SetCdnIntegrity("sha384-EHgRfTYf/UVwKC7GZSYXRKe6qpHVG+k4h3ZFyCtnLSgDj54TTaQpruS8s28W61Ct", "sha384-ne0BPbnDkNs2i0EKuWMke0Q8NkB7XqFrDCxlHA1gO8VUa0+thFLqv7YL/y7fHfhF")
                 .SetVersion(codeMirrorVersion);
 
             manifest
@@ -305,7 +305,7 @@ namespace OrchardCore.Resources
                 .DefineScript("codemirror-mode-css")
                 .SetUrl("~/OrchardCore.Resources/Scripts/codemirror/mode/css/css.min.js", "~/OrchardCore.Resources/Scripts/codemirror/mode/css/css.js")
                 .SetCdn(codeMirrorUrl + "mode/css/css.min.js", codeMirrorUrl + "mode/css/css.js")
-                .SetCdnIntegrity("sha384-eYtVos8bVpphyL68py5hgHyifb0sVDW+DNlvPAux3Z35IJA7KrDkNZ+V/hWITWRj", "sha384-wfH+HE/gJpLpxQqxdKZ+CYO+yTOSbLDEEGYqWKtpFKDcDY6gXY8sEHvCAEkQRbKZ")
+                .SetCdnIntegrity("sha384-IkA5dwHN+lGrX/ZxO+sktNF+wGXL06QJAVUag0yEBb7QDNM59YKsI5qWYc7SKPtN", "sha384-bZYw0+OmoeFivaUT4/YNXLYKX7+hahkNA64LcETceaOhHFqbNqetu6c0vIhMPqXy")
                 .SetVersion(codeMirrorVersion);
 
             manifest
@@ -326,7 +326,7 @@ namespace OrchardCore.Resources
                 .DefineScript("codemirror-mode-sql")
                 .SetUrl("~/OrchardCore.Resources/Scripts/codemirror/mode/sql/sql.min.js", "~/OrchardCore.Resources/Scripts/codemirror/mode/sql/sql.js")
                 .SetCdn(codeMirrorUrl + "mode/sql/sql.min.js", codeMirrorUrl + "mode/sql/sql.js")
-                .SetCdnIntegrity("sha384-daNQ7hOfcJZirENqiBm62mvkvvW8yItvGPL5Ofa8aZ2VBMg9rLtC3n0j2cjx9XeE", "sha384-BtH64vvyh+U8hp/pvYMLRcRqhuysm+QsQ/CssoMy7h+W8JgmAD53f2+FJ+bVwMxa")
+                .SetCdnIntegrity("sha384-LnNQf6kxsWRUR1gIJto9AsloUow3HzeE1WLOBNFh2snAy3cTlGK8VFVw7v5TvFfN", "sha384-x+5PPG+/GfZmN/pSGwtvsFLaYMv8FnmX+xpWs1BTM3RNGrISCEMF9gatNn4tSuhl")
                 .SetVersion(codeMirrorVersion);
 
             manifest
@@ -382,7 +382,7 @@ namespace OrchardCore.Resources
             manifest
                 .DefineScript("trumbowyg")
                 .SetDependencies("jquery-resizable")
-                .SetUrl("~/OrchardCore.Resources/Scripts/trumbowyg.js", "~/OrchardCore.Resources/Scripts/trumbowyg.js")
+                .SetUrl("~/OrchardCore.Resources/Scripts/trumbowyg.min.js", "~/OrchardCore.Resources/Scripts/trumbowyg.js")
                 .SetCdn("https://cdn.jsdelivr.net/npm/trumbowyg@2.25.1/dist/trumbowyg.min.js", "https://cdn.jsdelivr.net/npm/trumbowyg@2.25.1/dist/trumbowyg.js")
                 .SetCdnIntegrity("sha384-wwt6vSsdmnPNAuXp11Jjm37wAA+b/Rm33Jhd3QE/5E4oDLeNoCTLU3kxQYsdOtdW", "sha384-N2uP/HqSD9qptuEGY2J1Iq0G5jqaYUcuMGUnyWiS6giy4adYptw2Co8hT7LQJKcT")
                 .SetVersion("2.25.1");
@@ -390,7 +390,7 @@ namespace OrchardCore.Resources
             manifest
                 .DefineScript("trumbowyg-shortcodes")
                 .SetDependencies("trumbowyg")
-                .SetUrl("~/OrchardCore.Resources/Scripts/trumbowyg.shortcodes.js", "~/OrchardCore.Resources/Scripts/trumbowyg.shortcodes.min.js")
+                .SetUrl("~/OrchardCore.Resources/Scripts/trumbowyg.shortcodes.min.js", "~/OrchardCore.Resources/Scripts/trumbowyg.shortcodes.js")
                 .SetVersion("1.0.0");
 
             manifest
@@ -402,7 +402,7 @@ namespace OrchardCore.Resources
             manifest
                 .DefineScript("trumbowyg-plugins")
                 .SetDependencies("trumbowyg")
-                .SetUrl("~/OrchardCore.Resources/Scripts/trumbowyg-plugins.js", "~/OrchardCore.Resources/Scripts/trumbowyg-plugins.js")
+                .SetUrl("~/OrchardCore.Resources/Scripts/trumbowyg-plugins.min.js", "~/OrchardCore.Resources/Scripts/trumbowyg-plugins.js")
                 .SetVersion("2.25.1");
 
             manifest
