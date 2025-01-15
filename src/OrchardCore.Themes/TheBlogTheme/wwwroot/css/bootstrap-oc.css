@@ -253,10 +253,14 @@ ul.pager {
   margin-top: 1rem;
 }
 
+.g-recaptcha {
+  margin-bottom: 1rem;
+}
+
 .term-badge > a {
   text-decoration: none;
 }
-.term-badge .badge-secondary:hover {
+.term-badge .bg-secondary:hover {
   background-color: #0085A1;
 }
 

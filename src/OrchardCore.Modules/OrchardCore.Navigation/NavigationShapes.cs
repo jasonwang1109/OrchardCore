@@ -4,44 +4,47 @@ using Microsoft.Extensions.DependencyInjection;
 using OrchardCore.DisplayManagement;
 using OrchardCore.DisplayManagement.Descriptors;
 using OrchardCore.DisplayManagement.Shapes;
+using OrchardCore.DisplayManagement.Utilities;
 using OrchardCore.Mvc.Utilities;
 
-namespace OrchardCore.Navigation
+namespace OrchardCore.Navigation;
+
+public class NavigationShapes : ShapeTableProvider
 {
-    public class NavigationShapes : IShapeTableProvider
+    public override ValueTask DiscoverAsync(ShapeTableBuilder builder)
     {
-        public void Discover(ShapeTableBuilder builder)
-        {
-            builder.Describe("Navigation")
-                .OnDisplaying(displaying =>
+        builder.Describe("Navigation")
+            .OnDisplaying(displaying =>
+            {
+                var menu = displaying.Shape;
+                var menuName = menu.GetProperty<string>("MenuName");
+
+                menu.Classes.Add("menu-" + menuName.HtmlClassify());
+                menu.Classes.Add("menu");
+                menu.Metadata.Alternates.Add("Navigation__" + menuName.EncodeAlternateElement());
+            })
+            .OnProcessing(async context =>
+            {
+                var menu = context.Shape;
+                var menuName = menu.GetProperty<string>("MenuName");
+
+                // Menu population is executed when processing the shape so that its value
+                // can be cached. IShapeDisplayEvents is called before the ShapeDescriptor
+                // events and thus this code can be cached.
+
+                if (menu is Shape shape && shape.HasItems)
                 {
-                    var menu = displaying.Shape;
-                    var menuName = menu.GetProperty<string>("MenuName");
+                    return;
+                }
 
-                    menu.Classes.Add("menu-" + menuName.HtmlClassify());
-                    menu.Classes.Add("menu");
-                    menu.Metadata.Alternates.Add("Navigation__" + EncodeAlternateElement(menuName));
-                })
-                .OnProcessing(async context =>
+                var viewContextAccessor = context.ServiceProvider.GetRequiredService<ViewContextAccessor>();
+                var viewContext = viewContextAccessor.ViewContext;
+                var navigationManagers = context.ServiceProvider.GetServices<INavigationManager>();
+                var shapeFactory = context.ServiceProvider.GetRequiredService<IShapeFactory>();
+                var httpContextAccessor = context.ServiceProvider.GetRequiredService<IHttpContextAccessor>();
+
+                foreach (var navigationManager in navigationManagers)
                 {
-                    var menu = context.Shape;
-                    var menuName = menu.GetProperty<string>("MenuName");
-
-                    // Menu population is executed when processing the shape so that its value
-                    // can be cached. IShapeDisplayEvents is called before the ShapeDescriptor
-                    // events and thus this code can be cached.
-
-                    if (menu is Shape shape && shape.HasItems)
-                    {
-                        return;
-                    }
-
-                    var viewContextAccessor = context.ServiceProvider.GetRequiredService<ViewContextAccessor>();
-                    var viewContext = viewContextAccessor.ViewContext;
-
-                    var navigationManager = context.ServiceProvider.GetRequiredService<INavigationManager>();
-                    var shapeFactory = context.ServiceProvider.GetRequiredService<IShapeFactory>();
-                    var httpContextAccessor = context.ServiceProvider.GetRequiredService<IHttpContextAccessor>();
                     var menuItems = await navigationManager.BuildMenuAsync(menuName, viewContext);
                     var httpContext = httpContextAccessor.HttpContext;
 
@@ -66,45 +69,41 @@ namespace OrchardCore.Navigation
 
                     // TODO: Flag Selected menu item
                     await NavigationHelper.PopulateMenuAsync(shapeFactory, menu, menu, menuItems, viewContext);
-                });
+                }
+            });
 
-            builder.Describe("NavigationItem")
-                .OnDisplaying(displaying =>
-                {
-                    var menuItem = displaying.Shape;
-                    var menu = menuItem.GetProperty<IShape>("Menu");
-                    var menuName = menu.GetProperty<string>("MenuName");
-                    var level = menuItem.GetProperty<int>("Level");
+        builder.Describe("NavigationItem")
+            .OnDisplaying(displaying =>
+            {
+                var menuItem = displaying.Shape;
+                var menu = menuItem.GetProperty<IShape>("Menu");
+                var menuName = menu.GetProperty<string>("MenuName");
+                var level = menuItem.GetProperty<int>("Level");
 
-                    menuItem.Metadata.Alternates.Add("NavigationItem__level__" + level);
-                    menuItem.Metadata.Alternates.Add("NavigationItem__" + EncodeAlternateElement(menuName));
-                    menuItem.Metadata.Alternates.Add("NavigationItem__" + EncodeAlternateElement(menuName) + "__level__" + level);
-                });
+                var encodedMenuName = menuName.EncodeAlternateElement();
 
-            builder.Describe("NavigationItemLink")
-                .OnDisplaying(displaying =>
-                {
-                    var menuItem = displaying.Shape;
-                    var menuName = menuItem.GetProperty<IShape>("Menu").GetProperty<string>("MenuName");
-                    var level = menuItem.GetProperty<int>("Level");
+                menuItem.Metadata.Alternates.Add("NavigationItem__level__" + level);
+                menuItem.Metadata.Alternates.Add("NavigationItem__" + encodedMenuName);
+                menuItem.Metadata.Alternates.Add("NavigationItem__" + encodedMenuName + "__level__" + level);
+            });
 
-                    menuItem.Metadata.Alternates.Add("NavigationItemLink__level__" + level);
+        builder.Describe("NavigationItemLink")
+            .OnDisplaying(displaying =>
+            {
+                var menuItem = displaying.Shape;
+                var menuName = menuItem.GetProperty<IShape>("Menu").GetProperty<string>("MenuName");
+                var level = menuItem.GetProperty<int>("Level");
 
-                    // NavigationItemLink__[MenuName] e.g. NavigationItemLink-Main-Menu
-                    // NavigationItemLink__[MenuName]__level__[level] e.g. NavigationItemLink-Main-Menu-level-2
-                    menuItem.Metadata.Alternates.Add("NavigationItemLink__" + EncodeAlternateElement(menuName));
-                    menuItem.Metadata.Alternates.Add("NavigationItemLink__" + EncodeAlternateElement(menuName) + "__level__" + level);
-                });
-        }
+                menuItem.Metadata.Alternates.Add("NavigationItemLink__level__" + level);
 
-        /// <summary>
-        /// Encodes dashed and dots so that they don't conflict in filenames
-        /// </summary>
-        /// <param name="alternateElement"></param>
-        /// <returns></returns>
-        private static string EncodeAlternateElement(string alternateElement)
-        {
-            return alternateElement.Replace("-", "__").Replace('.', '_');
-        }
+                var encodedMenuName = menuName.EncodeAlternateElement();
+
+                // NavigationItemLink__[MenuName] e.g. NavigationItemLink-Main-Menu
+                // NavigationItemLink__[MenuName]__level__[level] e.g. NavigationItemLink-Main-Menu-level-2
+                menuItem.Metadata.Alternates.Add("NavigationItemLink__" + encodedMenuName);
+                menuItem.Metadata.Alternates.Add("NavigationItemLink__" + encodedMenuName + "__level__" + level);
+            });
+
+        return ValueTask.CompletedTask;
     }
 }

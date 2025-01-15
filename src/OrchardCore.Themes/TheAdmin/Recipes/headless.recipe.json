@@ -27,6 +27,7 @@
         "OrchardCore.Recipes",
         "OrchardCore.Resources",
         "OrchardCore.Roles",
+        "OrchardCore.Security",
         "OrchardCore.Settings",
         "OrchardCore.Themes",
         "OrchardCore.Users",
@@ -64,8 +65,33 @@
       "name": "Roles",
       "Roles": [
         {
-          "Name": "AUTHENTICATED",
-          "Description": null,
+          "Name": "Administrator",
+          "Description": "A system role that grants all permissions to the assigned users.",
+          "Permissions": []
+        },
+        {
+          "Name": "Moderator",
+          "Description": "Grants users the ability to moderate content.",
+          "Permissions": []
+        },
+        {
+          "Name": "Editor",
+          "Description": "Grants users the ability to edit existing content.",
+          "Permissions": []
+        },
+        {
+          "Name": "Author",
+          "Description": "Grants users the ability to create content.",
+          "Permissions": []
+        },
+        {
+          "Name": "Contributor",
+          "Description": "Grants users the ability to contribute content.",
+          "Permissions": []
+        },
+        {
+          "Name": "Authenticated",
+          "Description": "A system role representing all authenticated users.",
           "Permissions": [
             "ViewContent",
             "ExecuteGraphQL",
@@ -73,8 +99,8 @@
           ]
         },
         {
-          "Name": "ANONYMOUS",
-          "Description": null,
+          "Name": "Anonymous",
+          "Description": "A system role representing all non-authenticated users.",
           "Permissions": []
         }
       ]
